@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local IDE / OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Local data and caches
+data/raw/
+data/processed/
+data/cache/
+notebooks/.ipynb_checkpoints/
+
+# Artifacts and model weights
+artifacts/
+outputs/
+checkpoints/
+logs/
+runs/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.joblib
+*.pkl
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Environment files
+.env
+.env.local
+

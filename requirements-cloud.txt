@@ -1,0 +1,14 @@
+# Cloud training dependencies
+# Install with: pip install -r requirements-cloud.txt
+# For GPU PyTorch, install the correct wheel separately based on your CUDA version.
+
+-r requirements.txt
+
+# Deep learning stack used on cloud servers
+torch
+torchvision
+torchaudio
+tqdm==4.67.1
+tensorboard==2.19.0
+accelerate==1.10.0
+
