@@ -258,9 +258,17 @@ class GradientBoostingFactorModel:
             scored["score"] = []
             return scored
 
-        features = self._prepare_features(scored)
-        scored["score"] = self.model.predict(features)
+        scored["score"] = self.predict_scores(scored)
         return scored
+
+    def predict_scores(self, panel: pd.DataFrame) -> np.ndarray:
+        """Return raw prediction scores without copying the full input panel."""
+        if self.model is None:
+            raise ValueError("Model is not fitted yet.")
+        if panel.empty:
+            return np.array([], dtype=float)
+        features = self._prepare_features(panel)
+        return np.asarray(self.model.predict(features), dtype=float)
 
     def fit_predict(self, panel: pd.DataFrame, **fit_kwargs) -> pd.DataFrame:
         """Fit the model and score the full panel in one call."""

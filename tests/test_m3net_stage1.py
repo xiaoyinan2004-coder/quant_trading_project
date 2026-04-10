@@ -123,12 +123,23 @@ def test_m3net_stage1_can_fit_and_rank_stocks(backend: str, tmp_path: Path) -> N
     selected = model.select_top_stocks(stock_data, minute_data=minute_data, top_n=3, as_of_date=latest_date)
 
     assert not scored.empty
-    assert {"tabular_score", "sequence_score", "score", "tabular_weight", "sequence_weight"}.issubset(scored.columns)
+    assert {
+        "tabular_score",
+        "sequence_score",
+        "score",
+        "tabular_weight",
+        "sequence_weight",
+        "router_mode",
+        "tabular_rank_ic_20d",
+        "sequence_rank_ic_20d",
+        "expert_ic_gap_20d",
+    }.issubset(scored.columns)
     assert np.allclose(scored["tabular_weight"] + scored["sequence_weight"], 1.0)
     assert len(selected) == 3
     assert selected["score"].is_monotonic_decreasing
     assert model.report is not None
     assert model.report.valid_rows > 0
+    assert model.report.router_mode in {"learned", "heuristic"}
 
     save_path = tmp_path / f"m3net_stage1_{backend}.joblib"
     model.save(save_path)
@@ -154,3 +165,4 @@ def test_m3net_stage1_works_without_minute_data() -> None:
 
     assert len(selected) == 4
     assert selected["has_minute_features"].eq(0.0).all()
+    assert selected["router_mode"].isin(["learned", "heuristic"]).all()

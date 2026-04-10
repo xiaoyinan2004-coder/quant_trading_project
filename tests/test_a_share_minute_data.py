@@ -64,6 +64,31 @@ class FakeMinuteProvider:
         )
 
 
+class FlakyMinuteProvider(FakeMinuteProvider):
+    def __init__(self, failures_before_success: int = 1) -> None:
+        super().__init__()
+        self.failures_before_success = failures_before_success
+
+    def stock_zh_a_hist_min_em(
+        self,
+        symbol: str,
+        start_date: str,
+        end_date: str,
+        period: str,
+        adjust: str,
+    ) -> pd.DataFrame:
+        self.hist_calls += 1
+        if self.hist_calls <= self.failures_before_success:
+            raise RuntimeError("temporary eastmoney proxy failure")
+        return super().stock_zh_a_hist_min_em(
+            symbol=symbol,
+            start_date=start_date,
+            end_date=end_date,
+            period=period,
+            adjust=adjust,
+        )
+
+
 def test_fetch_historical_minute_normalizes_and_filters_sessions(tmp_path: Path) -> None:
     provider = FakeMinuteProvider()
     fetcher = AShareMinuteDataFetcher(cache_dir=str(tmp_path), provider=provider)
@@ -142,3 +167,24 @@ def test_resample_and_split_by_trade_date(tmp_path: Path) -> None:
     assert not resampled.empty
     assert "000001" == resampled["symbol"].iloc[0]
     assert list(split.keys()) == ["2026-03-31"]
+
+
+def test_fetch_historical_retries_after_temporary_failure(tmp_path: Path) -> None:
+    provider = FlakyMinuteProvider(failures_before_success=1)
+    fetcher = AShareMinuteDataFetcher(
+        cache_dir=str(tmp_path),
+        provider=provider,
+        retry_attempts=2,
+        retry_delay_seconds=0,
+    )
+
+    frame = fetcher.fetch_historical(
+        symbol="000001",
+        start_datetime="2026-03-31 09:20:00",
+        end_datetime="2026-03-31 15:00:00",
+        period="1",
+        use_cache=False,
+    )
+
+    assert not frame.empty
+    assert provider.hist_calls == 3

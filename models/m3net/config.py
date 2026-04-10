@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, Optional
 
 
 @dataclass
@@ -28,7 +28,19 @@ class M3NetStage1Config:
     label_horizon: int = 5
     train_ratio: float = 0.8
     min_history: int = 80
+    train_lookback_days: Optional[int] = 504
     sequence_lookback: int = 20
     top_n: int = 20
     random_state: int = 42
-
+    enable_alpha_memory: bool = True
+    alpha_memory_lookback_short: int = 20
+    alpha_memory_lookback_long: int = 60
+    use_learned_router: bool = True
+    router_model_params: Dict[str, float] = field(
+        default_factory=lambda: {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "max_iter": 120,
+            "min_samples_leaf": 40,
+        }
+    )

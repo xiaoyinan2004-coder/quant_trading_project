@@ -1,0 +1,24 @@
+cd /workspace
+source .venv/bin/activate
+export PYTHONPATH=/workspace
+python scripts/evaluate_m3net_full.py \
+  --checkpoint artifacts/m3net_full.best.pt \
+  --daily-dir data/daily \
+  --device cuda \
+  --min-stock-rows 1000 \
+  --rebalance-freq M \
+  --eval-lookback-periods 12 \
+  --top-n 20 \
+  --top-k-list 5 10 20 \
+  --include-baseline \
+  --ensemble-weights 0.2 0.4 0.5 0.6 0.8 \
+  --baseline-backend lightgbm \
+  --baseline-train-lookback-days 504 \
+  --output-dir artifacts/m3net_full_eval
+
+python - <<'PY'
+import pandas as pd
+print(pd.read_csv('artifacts/m3net_full_eval/compare_summary.csv').to_string(index=False))
+print()
+print(pd.read_csv('artifacts/m3net_full_eval/aligned_periods.csv').to_string(index=False))
+PY

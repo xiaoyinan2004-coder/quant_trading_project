@@ -16,6 +16,12 @@ def _safe_pct_change(series: pd.Series, periods: int) -> pd.Series:
     return changed.replace([np.inf, -np.inf], np.nan)
 
 
+def _safe_ratio(numerator: float, denominator: float, default: float = 0.0) -> float:
+    if denominator is None or not np.isfinite(denominator) or abs(float(denominator)) < 1e-8:
+        return float(default)
+    return float(numerator) / float(denominator)
+
+
 class SequenceFeatureBuilder:
     """Build lightweight time-series features from daily and minute bars."""
 
@@ -23,19 +29,31 @@ class SequenceFeatureBuilder:
         "daily_return_1d",
         "daily_return_5d",
         "daily_return_10d",
+        "daily_return_20d",
         "daily_volatility_5d",
         "daily_volatility_20d",
         "daily_volume_ratio_20d",
         "daily_trend_strength_10d",
+        "daily_close_to_20d_high",
+        "daily_close_to_20d_low",
     ]
     MINUTE_FEATURES = [
         "intraday_return",
         "intraday_range",
         "intraday_volatility",
+        "realized_volatility",
         "intraday_volume_ratio",
+        "volume_burst_ratio",
         "close_to_vwap",
         "morning_return",
         "afternoon_return",
+        "open_30m_return",
+        "close_30m_return",
+        "morning_range",
+        "afternoon_range",
+        "intraday_trend_strength",
+        "midday_reversal",
+        "close_position_in_range",
     ]
 
     def __init__(self, lookback: int = 20) -> None:
@@ -86,11 +104,16 @@ class SequenceFeatureBuilder:
         result["daily_return_1d"] = _safe_pct_change(close, 1)
         result["daily_return_5d"] = _safe_pct_change(close, 5)
         result["daily_return_10d"] = _safe_pct_change(close, 10)
+        result["daily_return_20d"] = _safe_pct_change(close, 20)
         result["daily_volatility_5d"] = close.pct_change().rolling(5).std()
         result["daily_volatility_20d"] = close.pct_change().rolling(20).std()
         result["daily_volume_ratio_20d"] = volume / volume.rolling(20).mean()
         ma10 = close.rolling(10).mean()
+        rolling_high_20d = frame["high"].astype(float).rolling(20).max()
+        rolling_low_20d = frame["low"].astype(float).rolling(20).min()
         result["daily_trend_strength_10d"] = close / ma10 - 1.0
+        result["daily_close_to_20d_high"] = close / rolling_high_20d - 1.0
+        result["daily_close_to_20d_low"] = close / rolling_low_20d - 1.0
         result["date"] = pd.to_datetime(result.index)
         result["symbol"] = symbol
         return result.reset_index(drop=True)
@@ -100,6 +123,10 @@ class SequenceFeatureBuilder:
             return pd.DataFrame(columns=["date", "symbol", *self.MINUTE_FEATURES, "has_minute_features"])
 
         frame = minute_df.copy().sort_index()
+        for column in ("open", "high", "low", "close", "volume", "amount"):
+            if column in frame.columns:
+                frame[column] = pd.to_numeric(frame[column], errors="coerce")
+
         grouped_rows = []
         daily_volume_totals = frame.groupby(frame.index.normalize())["volume"].sum().astype(float)
         volume_baseline = daily_volume_totals.rolling(self.lookback, min_periods=1).median().shift(1)
@@ -110,12 +137,14 @@ class SequenceFeatureBuilder:
             close_price = float(group["close"].iloc[-1])
             high_price = float(group["high"].max())
             low_price = float(group["low"].min())
-            returns = group["close"].pct_change().dropna()
+            returns = group["close"].pct_change().replace([np.inf, -np.inf], np.nan).dropna()
             typical_price = (group["high"] + group["low"] + group["close"]) / 3.0
             total_volume = float(group["volume"].sum())
             vwap = float((typical_price * group["volume"]).sum() / max(total_volume, 1.0))
             morning = group.between_time("09:30", "11:30")
             afternoon = group.between_time("13:00", "15:00")
+            first_30m = group.between_time("09:30", "10:00")
+            last_30m = group.between_time("14:30", "15:00")
             baseline = volume_baseline.get(trade_date, np.nan)
             if pd.isna(baseline) or baseline <= 0:
                 intraday_volume_ratio = 1.0
@@ -123,27 +152,73 @@ class SequenceFeatureBuilder:
                 intraday_volume_ratio = total_volume / float(baseline)
 
             morning_return = (
-                float(morning["close"].iloc[-1] / morning["open"].iloc[0] - 1.0)
+                _safe_ratio(float(morning["close"].iloc[-1]), float(morning["open"].iloc[0]), default=1.0) - 1.0
                 if not morning.empty
                 else 0.0
             )
             afternoon_return = (
-                float(afternoon["close"].iloc[-1] / afternoon["open"].iloc[0] - 1.0)
+                _safe_ratio(float(afternoon["close"].iloc[-1]), float(afternoon["open"].iloc[0]), default=1.0) - 1.0
                 if not afternoon.empty
                 else 0.0
             )
+            open_30m_return = (
+                _safe_ratio(float(first_30m["close"].iloc[-1]), float(first_30m["open"].iloc[0]), default=1.0) - 1.0
+                if not first_30m.empty
+                else 0.0
+            )
+            close_30m_return = (
+                _safe_ratio(float(last_30m["close"].iloc[-1]), float(last_30m["open"].iloc[0]), default=1.0) - 1.0
+                if not last_30m.empty
+                else 0.0
+            )
+            morning_range = (
+                _safe_ratio(float(morning["high"].max()), float(morning["low"].min()), default=1.0) - 1.0
+                if not morning.empty
+                else 0.0
+            )
+            afternoon_range = (
+                _safe_ratio(float(afternoon["high"].max()), float(afternoon["low"].min()), default=1.0) - 1.0
+                if not afternoon.empty
+                else 0.0
+            )
+            volume_burst_ratio = (
+                float(group["volume"].max() / max(group["volume"].median(), 1.0))
+                if not group["volume"].empty
+                else 1.0
+            )
+            intraday_trend_strength = (
+                float((close_price - open_price) / max(high_price - low_price, 1e-8))
+                if high_price > low_price
+                else 0.0
+            )
+            midday_reversal = afternoon_return - morning_return
+            close_position_in_range = (
+                float((close_price - low_price) / max(high_price - low_price, 1e-8))
+                if high_price > low_price
+                else 0.5
+            )
+            realized_volatility = float(np.sqrt(np.square(returns).sum())) if not returns.empty else 0.0
 
             grouped_rows.append(
                 {
                     "date": pd.Timestamp(trade_date),
                     "symbol": symbol,
-                    "intraday_return": close_price / open_price - 1.0,
-                    "intraday_range": high_price / low_price - 1.0 if low_price else 0.0,
+                    "intraday_return": _safe_ratio(close_price, open_price, default=1.0) - 1.0,
+                    "intraday_range": _safe_ratio(high_price, low_price, default=1.0) - 1.0,
                     "intraday_volatility": float(returns.std()) if not returns.empty else 0.0,
+                    "realized_volatility": realized_volatility,
                     "intraday_volume_ratio": intraday_volume_ratio,
-                    "close_to_vwap": close_price / vwap - 1.0 if vwap else 0.0,
+                    "volume_burst_ratio": volume_burst_ratio,
+                    "close_to_vwap": _safe_ratio(close_price, vwap, default=1.0) - 1.0,
                     "morning_return": morning_return,
                     "afternoon_return": afternoon_return,
+                    "open_30m_return": open_30m_return,
+                    "close_30m_return": close_30m_return,
+                    "morning_range": morning_range,
+                    "afternoon_range": afternoon_range,
+                    "intraday_trend_strength": intraday_trend_strength,
+                    "midday_reversal": midday_reversal,
+                    "close_position_in_range": close_position_in_range,
                     "has_minute_features": 1.0,
                 }
             )
@@ -223,8 +298,15 @@ class SequenceExpertModel:
             scored["score"] = []
             return scored
 
-        scored["score"] = self.model.predict(self._prepare_features(scored))
+        scored["score"] = self.predict_scores(scored)
         return scored
+
+    def predict_scores(self, panel: pd.DataFrame) -> np.ndarray:
+        if self.model is None:
+            raise ValueError("Sequence expert has not been fitted.")
+        if panel.empty:
+            return np.array([], dtype=float)
+        return np.asarray(self.model.predict(self._prepare_features(panel)), dtype=float)
 
     def _prepare_features(self, frame: pd.DataFrame) -> pd.DataFrame:
         features = frame.loc[:, self.feature_columns].copy()
@@ -257,4 +339,3 @@ class SequenceExpertModel:
 def _rmse(y_true: pd.Series, y_pred: pd.Series) -> float:
     diff = y_true.to_numpy(dtype=float) - y_pred.to_numpy(dtype=float)
     return float(np.sqrt(np.mean(np.square(diff)))) if len(diff) else float("nan")
-

@@ -4,10 +4,23 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 import pandas as pd
 
 from models.m3net import M3NetStage1Config, M3NetStage1Model
+
+
+def _downcast_numeric_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    result = frame.copy()
+    numeric_columns = result.select_dtypes(include=["number"]).columns
+    for column in numeric_columns:
+        result[column] = pd.to_numeric(result[column], downcast="float")
+    return result
 
 
 def _load_price_folder(folder: Path) -> dict[str, pd.DataFrame]:
@@ -22,7 +35,7 @@ def _load_price_folder(folder: Path) -> dict[str, pd.DataFrame]:
             frame = frame.set_index("datetime")
         else:
             raise ValueError(f"{csv_path} is missing a date or datetime column.")
-        data[csv_path.stem] = frame.sort_index()
+        data[csv_path.stem] = _downcast_numeric_columns(frame.sort_index())
     if not data:
         raise ValueError(f"No CSV files found in {folder}")
     return data
