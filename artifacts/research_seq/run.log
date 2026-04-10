@@ -1,0 +1,161 @@
+Running experiment: baseline_factor (76 rebalance periods)
+[baseline_factor] period 1/76 -> 2020-01-23
+[baseline_factor] skipped 2020-01-23 because only 0 symbols met history requirements
+[baseline_factor] period 2/76 -> 2020-02-28
+[baseline_factor] skipped 2020-02-28 because only 0 symbols met history requirements
+[baseline_factor] period 3/76 -> 2020-03-31
+[baseline_factor] skipped 2020-03-31 because only 0 symbols met history requirements
+[baseline_factor] period 4/76 -> 2020-04-30
+[baseline_factor] skipped 2020-04-30 because only 0 symbols met history requirements
+[baseline_factor] period 5/76 -> 2020-05-29
+[baseline_factor] no selections produced for 2020-05-29
+[baseline_factor] period 6/76 -> 2020-06-30
+[baseline_factor] no selections produced for 2020-06-30
+[baseline_factor] period 7/76 -> 2020-07-31
+[baseline_factor] no selections produced for 2020-07-31
+[baseline_factor] period 8/76 -> 2020-08-31
+[baseline_factor] no selections produced for 2020-08-31
+[baseline_factor] period 9/76 -> 2020-09-30
+[baseline_factor] no selections produced for 2020-09-30
+[baseline_factor] period 10/76 -> 2020-10-30
+[baseline_factor] no selections produced for 2020-10-30
+[baseline_factor] period 11/76 -> 2020-11-30
+[baseline_factor] no selections produced for 2020-11-30
+[baseline_factor] period 12/76 -> 2020-12-31
+[baseline_factor] no selections produced for 2020-12-31
+[baseline_factor] period 13/76 -> 2021-01-29
+[baseline_factor] no selections produced for 2021-01-29
+[baseline_factor] period 14/76 -> 2021-02-26
+[baseline_factor] no selections produced for 2021-02-26
+[baseline_factor] period 15/76 -> 2021-03-31
+[baseline_factor] no selections produced for 2021-03-31
+[baseline_factor] period 16/76 -> 2021-04-30
+[baseline_factor] no selections produced for 2021-04-30
+[baseline_factor] period 17/76 -> 2021-05-31
+[baseline_factor] no selections produced for 2021-05-31
+[baseline_factor] period 18/76 -> 2021-06-30
+[baseline_factor] no selections produced for 2021-06-30
+[baseline_factor] period 19/76 -> 2021-07-30
+[baseline_factor] no selections produced for 2021-07-30
+[baseline_factor] period 20/76 -> 2021-08-31
+[baseline_factor] no selections produced for 2021-08-31
+[baseline_factor] period 21/76 -> 2021-09-30
+[baseline_factor] no selections produced for 2021-09-30
+[baseline_factor] period 22/76 -> 2021-10-29
+[baseline_factor] no selections produced for 2021-10-29
+[baseline_factor] period 23/76 -> 2021-11-30
+[baseline_factor] no selections produced for 2021-11-30
+[baseline_factor] period 24/76 -> 2021-12-31
+[baseline_factor] no selections produced for 2021-12-31
+[baseline_factor] period 25/76 -> 2022-01-28
+[baseline_factor] no selections produced for 2022-01-28
+[baseline_factor] period 26/76 -> 2022-02-28
+[baseline_factor] no selections produced for 2022-02-28
+[baseline_factor] period 27/76 -> 2022-03-31
+[baseline_factor] no selections produced for 2022-03-31
+[baseline_factor] period 28/76 -> 2022-04-29
+[baseline_factor] no selections produced for 2022-04-29
+[baseline_factor] period 29/76 -> 2022-05-31
+[baseline_factor] no selections produced for 2022-05-31
+[baseline_factor] period 30/76 -> 2022-06-30
+[baseline_factor] no selections produced for 2022-06-30
+[baseline_factor] period 31/76 -> 2022-07-29
+[baseline_factor] no selections produced for 2022-07-29
+[baseline_factor] period 32/76 -> 2022-08-31
+[baseline_factor] no selections produced for 2022-08-31
+[baseline_factor] period 33/76 -> 2022-09-30
+[baseline_factor] no selections produced for 2022-09-30
+[baseline_factor] period 34/76 -> 2022-10-31
+[baseline_factor] no selections produced for 2022-10-31
+[baseline_factor] period 35/76 -> 2022-11-30
+[baseline_factor] no selections produced for 2022-11-30
+[baseline_factor] period 36/76 -> 2022-12-30
+[baseline_factor] no selections produced for 2022-12-30
+[baseline_factor] period 37/76 -> 2023-01-31
+[baseline_factor] no selections produced for 2023-01-31
+[baseline_factor] period 38/76 -> 2023-02-28
+[baseline_factor] no selections produced for 2023-02-28
+[baseline_factor] period 39/76 -> 2023-03-31
+[baseline_factor] no selections produced for 2023-03-31
+[baseline_factor] period 40/76 -> 2023-04-28
+[baseline_factor] no selections produced for 2023-04-28
+[baseline_factor] period 41/76 -> 2023-05-31
+[baseline_factor] no selections produced for 2023-05-31
+[baseline_factor] period 42/76 -> 2023-06-30
+[baseline_factor] no selections produced for 2023-06-30
+[baseline_factor] period 43/76 -> 2023-07-31
+[baseline_factor] no selections produced for 2023-07-31
+[baseline_factor] period 44/76 -> 2023-08-31
+[baseline_factor] no selections produced for 2023-08-31
+[baseline_factor] period 45/76 -> 2023-09-28
+[baseline_factor] no selections produced for 2023-09-28
+[baseline_factor] period 46/76 -> 2023-10-31
+[baseline_factor] no selections produced for 2023-10-31
+[baseline_factor] period 47/76 -> 2023-11-30
+[baseline_factor] no selections produced for 2023-11-30
+[baseline_factor] period 48/76 -> 2023-12-29
+[baseline_factor] no selections produced for 2023-12-29
+[baseline_factor] period 49/76 -> 2024-01-31
+[baseline_factor] no selections produced for 2024-01-31
+[baseline_factor] period 50/76 -> 2024-02-29
+[baseline_factor] no selections produced for 2024-02-29
+[baseline_factor] period 51/76 -> 2024-03-29
+[baseline_factor] no selections produced for 2024-03-29
+[baseline_factor] period 52/76 -> 2024-04-30
+[baseline_factor] no selections produced for 2024-04-30
+[baseline_factor] period 53/76 -> 2024-05-31
+[baseline_factor] no selections produced for 2024-05-31
+[baseline_factor] period 54/76 -> 2024-06-28
+[baseline_factor] no selections produced for 2024-06-28
+[baseline_factor] period 55/76 -> 2024-07-31
+[baseline_factor] no selections produced for 2024-07-31
+[baseline_factor] period 56/76 -> 2024-08-30
+[baseline_factor] no selections produced for 2024-08-30
+[baseline_factor] period 57/76 -> 2024-09-30
+[baseline_factor] no selections produced for 2024-09-30
+[baseline_factor] period 58/76 -> 2024-10-31
+[baseline_factor] no selections produced for 2024-10-31
+[baseline_factor] period 59/76 -> 2024-11-29
+[baseline_factor] no selections produced for 2024-11-29
+[baseline_factor] period 60/76 -> 2024-12-31
+[baseline_factor] no selections produced for 2024-12-31
+[baseline_factor] period 61/76 -> 2025-01-27
+[baseline_factor] no selections produced for 2025-01-27
+[baseline_factor] period 62/76 -> 2025-02-28
+[baseline_factor] no selections produced for 2025-02-28
+[baseline_factor] period 63/76 -> 2025-03-31
+[baseline_factor] no selections produced for 2025-03-31
+[baseline_factor] period 64/76 -> 2025-04-30
+[baseline_factor] no selections produced for 2025-04-30
+[baseline_factor] period 65/76 -> 2025-05-30
+[baseline_factor] no selections produced for 2025-05-30
+[baseline_factor] period 66/76 -> 2025-06-30
+[baseline_factor] no selections produced for 2025-06-30
+[baseline_factor] period 67/76 -> 2025-07-31
+[baseline_factor] no selections produced for 2025-07-31
+[baseline_factor] period 68/76 -> 2025-08-29
+[baseline_factor] no selections produced for 2025-08-29
+[baseline_factor] period 69/76 -> 2025-09-30
+[baseline_factor] no selections produced for 2025-09-30
+[baseline_factor] period 70/76 -> 2025-10-31
+[baseline_factor] no selections produced for 2025-10-31
+[baseline_factor] period 71/76 -> 2025-11-28
+[baseline_factor] no selections produced for 2025-11-28
+[baseline_factor] period 72/76 -> 2025-12-31
+[baseline_factor] no selections produced for 2025-12-31
+[baseline_factor] period 73/76 -> 2026-01-30
+[baseline_factor] no selections produced for 2026-01-30
+[baseline_factor] period 74/76 -> 2026-02-27
+[baseline_factor] no selections produced for 2026-02-27
+[baseline_factor] period 75/76 -> 2026-03-31
+[baseline_factor] no selections produced for 2026-03-31
+[baseline_factor] period 76/76 -> 2026-04-01
+[baseline_factor] no selections produced for 2026-04-01
+Saved periods to: artifacts/research_seq/baseline_factor/rolling_periods.csv
+Saved picks to: artifacts/research_seq/baseline_factor/rolling_picks.csv
+Saved summary to: artifacts/research_seq/baseline_factor/summary.csv
+[launcher] (1/4) starting baseline_factor
+[launcher] command: /workspace/.venv/bin/python /workspace/scripts/run_m3net_research.py --daily-dir data/daily --backend lightgbm --rebalance-freq M --top-n 20 --min-stock-rows 1000 --train-lookback-days 504 --output-dir artifacts/research_seq/baseline_factor --experiments baseline_factor
+[launcher] completed baseline_factor
+[launcher] (2/4) starting m3net_v2_lite
+[launcher] command: /workspace/.venv/bin/python /workspace/scripts/run_m3net_research.py --daily-dir data/daily --backend lightgbm --rebalance-freq M --top-n 20 --min-stock-rows 1000 --train-lookback-days 504 --output-dir artifacts/research_seq/m3net_v2_lite --experiments m3net_v2_lite
